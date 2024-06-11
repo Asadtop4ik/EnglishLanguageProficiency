@@ -21,6 +21,7 @@ class CEFRSerializer(serializers.ModelSerializer):
         model = CEFR
         fields = '__all__'
 
+
 class ExamsSerializer(serializers.ModelSerializer):
     ielts = IELTS_Serializer()
     duolingo = DuolingoSerializer()
