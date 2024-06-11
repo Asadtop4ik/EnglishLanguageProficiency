@@ -2,6 +2,8 @@ from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 from .models import Exams, IELTS, Duolingo, TOEFL, CEFR
 from .serializers import ExamsSerializer, IELTS_Serializer, DuolingoSerializer, TOEFLSerializer, CEFRSerializer
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 
 
 class IELTSViewSet(viewsets.ModelViewSet):
@@ -28,13 +30,10 @@ class CEFRViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
 
 
-class ExamsViewSet(viewsets.ModelViewSet):
-    queryset = Exams.objects.all()
-    serializer_class = ExamsSerializer
-    permission_classes = [IsAuthenticated]
+@api_view(['GET'])
+def getExams(request):
+    if request.method == 'GET':
+        exams = Exams.objects.all()
+        serializer = ExamsSerializer(exams, many=True)
+        return Response(serializer.data)
 
-    def get_queryset(self):
-        return Exams.objects.filter(user=self.request.user)
-
-    def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
